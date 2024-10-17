@@ -32,6 +32,8 @@ function Form () {
             if (response.ok) {
                 const data = await response.json();
                 const token = data.body.token;
+                const test =loginSuccess (token)
+                console.log(test)
                 dispatch(loginSuccess(token));
                 navigate('/profile');
             } else {
@@ -45,7 +47,7 @@ function Form () {
         <section className='sign-in-content'>
             <i className="fa-solid fa-circle-user"></i>
             <h2>Sign In</h2>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div className='input-wrapper'>
                     <label htmlFor='username'>Username</label>
                     <input 
@@ -73,7 +75,7 @@ function Form () {
                     />
                     <label htmlFor='remember-me'>Remember me</label>
                 </div>
-                <button className="sign-in-button">
+                <button className="sign-in-button"onClick={handleSubmit}>
                     Sign In
                 </button>
                 {error && <p className='error-message'>{error}</p>}
