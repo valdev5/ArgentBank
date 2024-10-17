@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from '@reduxjs/toolkit';
-import { authReducer } from '../reducers/auth.red';
+import { authReducer } from './auth.red';
 // import { userReducer } from './reducers/user.reducer.jsx';
 export const initialState = {
     status: "VOID",

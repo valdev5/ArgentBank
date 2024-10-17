@@ -1,4 +1,4 @@
-import { initialState } from "../reducers/store.red";
+import { initialState } from "./store.red";
 import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "../actions/type";
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
