@@ -141,12 +141,12 @@ body {
   padding: 1rem;
 }
 
-.feature-item {
+.feature-Object {
   flex: 1;
   padding: 2.5rem;
 }
 
-.feature-item-title {
+.feature-object-title {
   color: #222;
   font-size: 1.25rem;
   font-weight: bold;

@@ -1,8 +1,7 @@
 import React from 'react';
 import Banner from '../../components/banner.jsx';
 import Object from '../../components/object.jsx';
-import Footer from '../../components/footer.jsx';
-import FeaturesItemData from '../../data/featuresitemdata.json'
+import FeaturesObjectData from '../../data/featuresobjectdata.json'
 import iconChat from '../../assets/img/icon-chat.webp';
 import iconMoney from '../../assets/img/icon-money.webp';
 import iconSecurity from '../../assets/img/icon-security.webp';
@@ -20,7 +19,7 @@ function Home () {
                 <Banner />
                 <section className="features">
                     <h2 className='sr-only'>Features</h2>
-                    {FeaturesItemData.map((data) => (
+                    {FeaturesObjectData.map((data) => (
                         < Object 
                             key={data.id}
                             image={imageData[data.image]}
@@ -31,7 +30,6 @@ function Home () {
                     ))}
                 </section>
             </main>
-            < Footer />
         </div>
             
         

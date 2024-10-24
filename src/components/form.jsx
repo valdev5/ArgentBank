@@ -3,22 +3,29 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginFailed, loginSuccess } from '../redux/actions/auth';
 import { isValidEmail, isValidPassword } from '../utils/regex';
+import '../pages/sass/components/form.scss'
 
 function Form () {
+    /* Allows you to retrieve the data entered by the user in the form */
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const [error, setError] = useState('');
+    /* Indicates an error message if data is invalid */
+    const [errorMessage, setErrorMessage] = useState('');
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    /* Asynchronous form function */
     const handleSubmit = async (event) => {
         event.preventDefault();
+        /* Handle error message */
         if (!isValidEmail(email)) {
-            setError("Invalid email adress");
+            setErrorMessage("Invalid email adress");
             return;
         }
         if (!isValidPassword(password)) {
-            setError("Invalid password");
+            setErrorMessage("Invalid password");
             return;
         }
         try {
@@ -31,23 +38,31 @@ function Form () {
             });
             if (response.ok) {
                 const data = await response.json();
+                /* 
+                    Checking that the query response is indeed retrieved
+                    console.log(data) 
+                */
                 const token = data.body.token;
-                const test =loginSuccess (token)
-                console.log(test)
                 dispatch(loginSuccess(token));
+                sessionStorage.setItem("token", token);
+                if (rememberMe) {
+                    localStorage.setItem("token", token);
+                }
                 navigate('/profile');
             } else {
+                const error = "Incorrect email/password"
                 dispatch(loginFailed(error));
             }
         } catch (error) {
             console.error(error);
         }
     }
+
     return (
         <section className='sign-in-content'>
             <i className="fa-solid fa-circle-user"></i>
             <h2>Sign In</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='input-wrapper'>
                     <label htmlFor='username'>Username</label>
                     <input 
@@ -67,7 +82,7 @@ function Form () {
                     />
                 </div>
                 <div className='input-remember'>
-                     <input 
+                    <input 
                         id='remember-me' 
                         type='checkbox' 
                         checked={rememberMe}
@@ -75,12 +90,13 @@ function Form () {
                     />
                     <label htmlFor='remember-me'>Remember me</label>
                 </div>
-                <button className="sign-in-button"onClick={handleSubmit}>
+                <button className="sign-in-button">
                     Sign In
                 </button>
-                {error && <p className='error-message'>{error}</p>}
+                {errorMessage && <p className='error-message'>{errorMessage}</p>}
             </form>
         </section>
     )
 }
+
 export default Form
