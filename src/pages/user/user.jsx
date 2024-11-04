@@ -1,23 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUsername } from '../../redux/actions/user.jsx';
 import { isValidName } from "../../utils/regex.jsx";
 import '../sass/components/user.scss';
 
-function User () {
-    /* Updates user data on profile page from state redux */
+function User() {
     const token = useSelector((state) => state.auth.token);
     const userData = useSelector((state) => state.user.userData);
-    /* Manages the appearance of the username modification form */
+
     const [display, setDisplay] = useState(true);
-    /* Get username */
-    const [userName, setUserName] = useState('');
-    /* Handle error message */
+    const [userName, setUserName] = useState(userData.username); // Initialise avec le nom d'utilisateur actuel
     const [errorMessage, setErrorMessage] = useState('');
 
     const dispatch = useDispatch();
 
-    /* Asynchronous username update function */
     const handleSubmitUsername = async (event) => {
         event.preventDefault();
         if (!isValidName(userName)) {
@@ -33,16 +29,13 @@ function User () {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({userName}),
+                body: JSON.stringify({ userName }),
             });
             if (response.ok) {
                 const data = await response.json();
                 const username = data.body.userName;
-                /* 
-                    Checking that the query response is indeed retrieved
-                    console.log(data) 
-                */
-                dispatch(updateUsername(username));
+                
+                dispatch(updateUsername(username)); // Met à jour le Redux store
                 setDisplay(!display);
             } else {
                 console.log("Invalid Fields")
@@ -52,14 +45,18 @@ function User () {
             console.error(error);
         }
     }
-    
+
+    useEffect(() => {
+        setUserName(userData.username); // Synchronise userName avec userData après modification
+    }, [userData.username]);
+
     return (
         <div className="header">
-            { display ? 
+            {display ? 
                 <div>
                     <h2>Welcome back 
                         <br />
-                        {userData.firstname} {userData.lastname} !
+                        {userName} {userData.lastname} !
                     </h2>
                     <button className="edit-button" onClick={() => setDisplay(!display)}>Edit Name</button>
                 </div>
@@ -72,7 +69,7 @@ function User () {
                             <input
                                 type="text"
                                 id="username"
-                                defaultValue={userData.username}
+                                value={userName}
                                 onChange={(event) => setUserName(event.target.value)}
                             />
                         </div>
@@ -80,7 +77,7 @@ function User () {
                             <label htmlFor="firstname">First name:</label>
                             <input
                                 type="text"
-                                id="firstname" 
+                                id="firstname"
                                 defaultValue={userData.firstname}
                                 disabled={true}
                             />
@@ -89,7 +86,7 @@ function User () {
                             <label htmlFor="lastname">Last name:</label>
                             <input
                                 type="text"
-                                id="lastname" 
+                                id="lastname"
                                 defaultValue={userData.lastname}
                                 disabled={true}
                             />
@@ -106,4 +103,4 @@ function User () {
     )
 }
 
-export default User
+export default User;
